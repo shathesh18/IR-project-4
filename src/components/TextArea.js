@@ -10,9 +10,20 @@ import Video from './video'
 import Iframe from './Iframe'
 
 import TitleBar from './titleBar'
+import PieChart from '../Plots/countryPie'
+import CustomChart from '../Plots/customChart'
+import { FormatAlignJustify } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 
+    graph: {
+        marginTop: '5ch'
+      },
+      maingraph: {
+        marginRight: '40000ch',
+        FormatAlignJustify:'center'
+      },
+    
     root: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -68,6 +79,9 @@ const Header=(props)=>{
     </div>
 )}
 
+
+
+
 const Tweet=(props)=>{
     const classes=useStyles()
     var month=props.date.split('-')[1]
@@ -88,12 +102,30 @@ const Tweet=(props)=>{
     </div>
     )
 }
+
+
+
+
+
+const New=(props)=>{
+    const classes=useStyles()
+    return (
+    <div className={classes.tweet}>       
+         <div style={{fontStyle:'italic', fontWeight:'bold'}}>@{props.userName} </div>
+         <div>{props.tweet}</div> 
+         <br/>
+    <a href={props.link} target='blank'>{props.link}</a>
+    </div>
+    )
+}
+
 export default function TextArea(props){
 
 
     console.log(props)
     const classes=useStyles();
     const tweets=props.tweets
+    const news=props.news
     console.log(tweets[0])
     const [click,setClick]=useState(0);
 
@@ -106,6 +138,8 @@ export default function TextArea(props){
         })
     }
 
+ var data=props.tweets_country
+console.log(data)
     return (
         <div>
             
@@ -118,6 +152,7 @@ export default function TextArea(props){
                         tweets.map(data=>(
                             <div className={classes.tweet_text}>
                                 <Tweet tweet={data.tweet_text} date={data.tweet_date} sentiment={data.sentiment[0]} userName={data['user.name']}></Tweet>
+                                
                                 <Divider/>
                             </div>
                         ))
@@ -126,10 +161,37 @@ export default function TextArea(props){
                 </Grid>
                 <Grid item xs={4}>
                     <Header heading='News'/>
+                    { 
+                        news.map(data=>(
+                            <div className={classes.tweet_text}>
+                                <New tweet={data.full_text} link={data.news_link}  userName={data['user.name']}/>
+                    
+                                <Divider/>
+                            </div>
+                        ))
+                        }
+                    
                 </Grid>
                 <Grid item xs={4}>
                     <Header heading='Analytics'/>
-                        
+                    <div className={classes.maingraph}>
+                        <CustomChart title='Tweets by POI' type='column' data={props.poi_tweets} language={true}/>
+                    </div>
+                    <div className={classes.maingraph}>
+                        <CustomChart title='Tweets by language' type='column' data={props.tweets_language} language={true}/>
+                    </div>
+                    <div className={classes.maingraph}>
+                        <CustomChart title='Tweets by country' type='pie' data={data} language={true}/>
+                    </div>
+                    
+                    <div className={classes.maingraph}>
+                        <CustomChart title='Tweets by sentiment' type='column' data={props.tweet_sentiments} language={true}/>
+                    </div>
+                    <div className={classes.maingraph}>
+                        <CustomChart title='public attitude towards governance' type='column' data={props.analysis} language={true}/>
+                    </div>
+                    
+
                 </Grid>
             </Grid>
            

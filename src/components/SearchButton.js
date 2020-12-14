@@ -10,6 +10,18 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(1),
         width: '25ch',
       },
+
+      SearchButton:{
+        color:'blue',
+        backgroundColor:'#CEE3F6',
+        marginLeft:'3ch',
+        marginRight:'1ch'
+      },
+      
+      relButton:{
+        color:'blue',
+        backgroundColor:'#E6E6E6',
+        },
       
     margin:{
       marginTop:'1ch'
@@ -21,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchButton(props){
     console.log(props)
+
+    
     const classes = useStyles();
 
     const handleChange=(event)=>{
@@ -44,10 +58,12 @@ export default function SearchButton(props){
           shrink: true,
         }}
       />
-      <IconButton onClick={(e)=>props.clickListener(props.rowsPerPage,true)} aria-label="seach" className={classes.margin} size="big">
-          <SearchIcon />
-      </IconButton>
+      <div>
+      <Button className={classes.SearchButton} onClick={(e)=>props.clickListener(props.rowsPerPage,true,0)}>search</Button>
+      <Button className={classes.relButton} onClick={(e)=>props.clickListener(props.rowsPerPage,true,1)}>sort by influence</Button>
       </div>
+      </div>
+      
   
     )
 }

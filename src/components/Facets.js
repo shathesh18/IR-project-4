@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         name: 'hai',
       });
 
-    const pois=require("../graphs/pois.json")
+    var pois=require("../graphs/pois.json")
       
     const topics=require('../graphs/topics.json')
 
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
         >
           <option aria-label="None" value="" />
           {pois.map(data=>{
-            return (<option value={data}>{data}</option>)
+            return (<option value={data.val}>{data.name}</option>)
           })}
         </Select>
       </FormControl>
@@ -94,22 +94,6 @@ const useStyles = makeStyles((theme) => ({
         </Select>
       </FormControl>
       
-      <FormControl  className={classes.formControl}>
-        <InputLabel htmlFor="filled-age-native-simple">Topic</InputLabel>
-        <Select
-          native
-          value={props.values.topic}
-          onChange={event=>{props.setters.setTopic(event.target.value)}}
-        >
-          <option aria-label="None" value="" />
-          {topics.map(data=>(
-            <option value={data}>{data}</option> 
-          )
-
-          )}
-          
-        </Select>
-      </FormControl>
       </div>
     
     )

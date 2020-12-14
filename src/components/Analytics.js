@@ -44,11 +44,17 @@ export default function Analytics(props) {
       <div className={classes.graph}>
         <TopicChart/>
       </div>
-      
       <div className={classes.graph}>
-        <Maps/>
+        <POIVsCovid/>
       </div>
       
+    { 
+    /* <div className={classes.graph}>
+        <Maps/>
+      </div>
+
+    */
+    }
     </Container>
   );
 }

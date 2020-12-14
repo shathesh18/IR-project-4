@@ -7,6 +7,7 @@ import TextArea from './TextArea'
 import Paper from '@material-ui/core/Paper';
 import {Container, Divider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { removeUndefinedProps } from '@material-ui/data-grid';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,35 +39,41 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchPage() {
   //const url='http://localhost:5000/search'
-  //const url='http://192.168.1.222:8000/api/search'
-  //const url='http://ec2-52-90-240-228.compute-1.amazonaws.com/get'
-  const url='http://54.211.53.53/get'
+  const url='http://54.208.237.78/get'
+  //const url='http://192.168.1.222:8004/api/search'
   const classes = useStyles();
   const [search,setSearch]=useState("")
   const [tweets,setTweets]=useState([])
-  const rowsPerPage=10
+  const [news,setNews]=useState([])
+  const rowsPerPage=40
   const [click,setClick]=useState(rowsPerPage)
-  
-
+  const [sort,setSort]=useState(0)
+ 
   console.log(tweets)
     const [poi,setPoi]=useState("")
     const [country,setCountry]=useState("")
     const [lang,setLang]=useState("")
     const [topic,setTopic]=useState("")
+    const [analytics,setAnalytics]=useState([])
+    const [tweets_country,SetTweets_country]=useState([])
+    const [tweets_language,setTweets_language]=useState([])
+    const [poi_tweets,setPoi_tweets]=useState([])
+    const [tweet_sentiments,setTweet_sentiments]=useState([])
+    const [analysis,setAnalysis]=useState([])
+    console.log(click)
+  const clickListener=(click,flag,sorter)=>{
+  
     
-  
-  console.log(click)
-  const clickListener=(click,flag)=>{
-  
-    var query=`search=${search}&end=${click}`
-
+    setClick(click+rowsPerPage)
+    var query=`end=${flag?rowsPerPage:click}`
+    if (search!=='') query=`${query}&search=${search}`
     if (country!=='') query=`${query}&country=${country}`
     if (poi!=='') query=`${query}&poi_name=${poi}` 
     if (lang!=='') query=`${query}&lang=${lang}`
     if (topic!=='') query=`${query}&topic=${topic}`
-    
-    setClick(flag?rowsPerPage:click+rowsPerPage)
-
+    if (sorter!==0) query=`${query}&sort=${sorter}`
+    setSort(sorter)
+    if (flag) setClick(80)
     fetch(`${url}?${query}`)
 
     .then(res=>{
@@ -76,8 +83,18 @@ export default function SearchPage() {
     })
     .then(json=>{
       console.log(json)
-      console.log(json.docs)
+      //json=json[0]
+      const country=json.tweets_country
+      SetTweets_country(country)
+      console.log(json.news)
+      setNews(json.news)
+      console.log(news)
       setTweets(json.docs)
+      setTweets_language(json.tweets_language)
+      setPoi_tweets(json.poi_tweets)
+      setTweet_sentiments(json.tweets_sentiment)
+      setAnalysis(json.analysis)
+
     })
   }
 
@@ -101,14 +118,23 @@ export default function SearchPage() {
         
     </Grid>
     {
-      tweets.length>0?
+      tweets!==undefined && tweets.length>0?
       <Paper elevation={5}>
         <div className={classes.TextArea}>
           
-          <TextArea search={search} tweets={tweets}/>
+          <TextArea 
+          tweets_language={tweets_language}
+           tweets_country={tweets_country} 
+           tweet_sentiments={tweet_sentiments}
+           poi_tweets={poi_tweets}
+           search={search} 
+           news={news} 
+           tweets={tweets}
+           analysis={analysis}
+           />
           <Grid item xs={4}>
           <div className={classes.pagination}>
-            <Button color='primary' onClick={e=>clickListener(click,false)}>load more</Button>
+            <Button color='primary' onClick={e=>clickListener(click,false,sort)}>load more</Button>
              </div>
           </Grid>
         
